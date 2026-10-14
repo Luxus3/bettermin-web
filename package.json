@@ -1,0 +1,14 @@
+{
+  "name": "bettermin-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio web de BetterMin: biotecnología, minería e inteligencia artificial.",
+  "scripts": {
+    "build": "esbuild src/entry.ts --bundle --minify --format=iife --target=es2019 --define:import.meta.url=location.href --outfile=assets/fx.js",
+    "dev": "npx --yes http-server -p 5510 -c-1 ."
+  },
+  "devDependencies": {
+    "esbuild": "0.24.2",
+    "three": "0.185.1"
+  }
+}

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>BetterMin | Biotecnología e Inteligencia para la Minería</title>
+<meta name="description" content="Leemos las comunidades microbianas de la pulpa, el agua de proceso y el mineral, y las convertimos en inteligencia operacional propietaria. Biotecnología, minería e inteligencia artificial.">
+<meta property="og:title" content="BetterMin | Biotecnología e Inteligencia para la Minería">
+<meta property="og:description" content="La biología de tu proceso finalmente tiene dueño.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#071612">
+<link rel="icon" type="image/png" href="assets/isotipo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   BetterMin · Web v2 · "Oscuro tecnológico"
+   Tema: verde casi negro + menta (dato) + dorado (biología).
+   Tipos: Space Grotesk (titulares) · Inter (texto) · JetBrains Mono (etiquetas).
+   Lenguaje gráfico: líneas finas, partículas = datos. Sin rombos, sin badges.
+
+   Animación (micro-sintaxis superdesign):
+   heroLine     900ms ease-out [Y+100%→0]               stagger+90ms
+   heroIso      loop  [partículas, cursor empuja, spring] (canvas-ui ParticleObject)
+   reveal       900ms ease-out [Y+28→0, α0→1]            on-scroll, stagger+80ms
+   qaAnswer     800ms ease-out [X-8→0, α0→1]             +250ms tras la fila
+   flowViz      ~1.6s ease-out [partículas → nueva forma] al cambiar de paso
+                islas → 3 flujos → gemelo (rota) → señal con desviación
+   phasesBar    1800ms ease-out [width 0→100%]          on-scroll
+   personLine   800ms [scaleX 0→1, color mint]          hover
+   ticker       44s linear ∞ [X 0→-50%]
+   reduced-motion: todo estático.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --bg:#071612;--bg-2:#0A1E19;--surface:#0E2721;--surface-2:#123129;
+  --line:rgba(232,239,236,.08);--line-2:rgba(232,239,236,.15);
+  --text:#E8EFEC;--text-2:rgba(232,239,236,.68);--text-3:rgba(232,239,236,.44);
+  --mint:#8CCFB3;--green:#2A7A63;--brand:#1B4D3E;--gold:#D9B26A;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --w:1240px;--pad:32px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px;-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:rgba(140,207,179,.25)}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 var(--pad)}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.035em;color:var(--text)}
+h1{font-size:clamp(42px,6vw,88px);line-height:.98}
+h2{font-size:clamp(32px,4vw,58px);line-height:1.02}
+h3{font-size:21px;line-height:1.2;letter-spacing:-.02em}
+p{color:var(--text-2)}
+.gold{color:var(--gold)}
+.label{display:inline-flex;align-items:center;gap:12px;color:var(--mint);margin-bottom:24px}
+.label.g{color:var(--gold)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease),border-color .3s,background-color .3s}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+.grid-bg{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:72px 72px}
+
+/* ── NAV ── */
+.nav{position:fixed;inset:0 0 auto;z-index:50;border-bottom:1px solid transparent;transition:background .35s,border-color .35s,transform .45s var(--ease)}
+.nav.solid{background:rgba(7,22,18,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+.nav.hide{transform:translateY(-100%)}
+.nav-in{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo img{height:36px;width:auto;filter:brightness(0) invert(1)}
+.links{display:flex;align-items:center;gap:30px}
+.links a{font-size:13.5px;color:var(--text-2);transition:color .25s}
+.links a:hover,.links a.on{color:var(--text)}
+.btn-o{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid var(--line-2);border-radius:3px;font-size:13.5px;font-weight:500;color:var(--text)!important;transition:background .3s,border-color .3s,color .3s}
+.btn-o:hover{background:var(--text);color:var(--bg)!important;border-color:var(--text)}
+.mb{display:none;width:44px;height:44px;position:relative;color:var(--text)}
+.mb span{position:absolute;left:11px;width:22px;height:1.5px;background:currentColor}
+.mb span:nth-child(1){top:16px}.mb span:nth-child(2){top:22px}.mb span:nth-child(3){top:28px}
+.mm{position:fixed;left:0;top:0;width:100%;height:100%;z-index:60;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:96px 28px 40px;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.mm:target{opacity:1;visibility:visible}
+.mm a.l{font-family:'Space Grotesk',sans-serif;font-size:32px;letter-spacing:-.03em;padding:12px 0;border-bottom:1px solid var(--line);transform:translateY(14px);transition:transform .5s var(--ease)}
+.mm:target a.l{transform:none}
+.mm small{margin-top:28px;color:var(--text-3);font-size:12px}
+.mm-x{position:absolute;top:16px;right:20px;width:44px;height:44px}
+.mm-x span{position:absolute;left:11px;top:21px;width:22px;height:1.5px;background:var(--text)}
+.mm-x span:first-child{transform:rotate(45deg)}.mm-x span:last-child{transform:rotate(-45deg)}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;overflow:hidden;padding-top:76px}
+.hero .grid-bg{mask-image:radial-gradient(ellipse 60% 70% at 72% 45%,#000 0%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 60% 70% at 72% 45%,#000 0%,transparent 75%);opacity:.7}
+.hero::before{content:"";position:absolute;width:720px;height:720px;right:-120px;top:8%;border-radius:50%;background:radial-gradient(circle,rgba(95,179,146,.16) 0%,rgba(95,179,146,0) 65%);pointer-events:none}
+.hero-grid{position:relative;flex:1;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-top:40px;padding-bottom:40px}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .ln>span{display:block;transform:translateY(105%);animation:rise 1s var(--ease) forwards}
+.hero h1 .ln:nth-child(2)>span{animation-delay:.09s}
+.hero h1 .ln:nth-child(3)>span{animation-delay:.18s}
+.hero h1 .ln:nth-child(4)>span{animation-delay:.27s}
+@keyframes rise{to{transform:none}}
+.fade{opacity:0;transform:translateY(16px);animation:fadeUp .9s var(--ease) forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.hero .label{animation-delay:.05s}
+.hero-sub{font-size:18px;line-height:1.6;max-width:540px;margin-top:30px;animation-delay:.45s}
+.hero-cta{display:flex;align-items:center;gap:24px;margin-top:40px;animation-delay:.6s}
+.link-a{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--text);border-bottom:1px solid var(--line-2);padding-bottom:4px;transition:gap .3s var(--ease),border-color .3s}
+.link-a:hover{gap:16px;border-color:var(--mint)}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;background:var(--text);color:var(--bg);border-radius:3px;font-size:14px;font-weight:600;transition:background .3s}
+.btn:hover{background:var(--mint)}
+.fx{position:relative;height:min(68vh,640px);min-height:420px}
+.fx canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.4s var(--ease);touch-action:pan-y}
+.fx.ready canvas{opacity:1}
+.fx .still{position:absolute;left:50%;top:50%;width:62%;max-width:380px;transform:translate(-50%,-50%);transition:opacity 1s}
+.fx .still img{width:100%;opacity:.8}
+.fx.ready .still{opacity:0}
+.fx-cap{position:absolute;left:0;right:0;bottom:6px;text-align:center;color:var(--text-3)}
+.claims{position:relative;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.claim{padding:24px 28px 30px 0}
+.claim+.claim{padding-left:28px;border-left:1px solid var(--line)}
+.claim .mono{color:var(--mint);display:block;margin-bottom:6px}
+.claim p{font-size:14.5px;color:var(--text)}
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;padding:16px 0;color:var(--text-3)}
+.ticker-in{display:inline-flex;gap:64px;animation:tick 44s linear infinite}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ── SECCIONES ── */
+.sec{position:relative;padding:136px 0}
+.sec.alt{background:var(--bg-2)}
+.head{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:end;margin-bottom:72px}
+.head p{font-size:17px;max-width:520px}
+
+/* PROBLEMA: preguntas de planta */
+.qa{border-top:1px solid var(--line-2)}
+.qa-head{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:56px;padding:18px 0;border-bottom:1px solid var(--line);color:var(--text-3)}
+.qa-head span:last-child{color:var(--mint)}
+.qa-row{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:56px;padding:38px 0;border-bottom:1px solid var(--line);align-items:start}
+.qa-row h3{font-size:clamp(21px,2vw,27px);letter-spacing:-.03em;line-height:1.2}
+.qa-col .mono{display:none;margin-bottom:8px;color:var(--text-3)}
+.qa-col p{font-size:15.5px;line-height:1.6}
+.qa-col.now p{color:var(--text-3)}
+.qa-col.bm{opacity:0;transform:translateX(-10px);transition:opacity .8s var(--ease) .25s,transform .8s var(--ease) .25s}
+.qa-row.in .qa-col.bm{opacity:1;transform:none}
+.qa-col.bm p{color:var(--text)}
+.qa-col.bm .mono{color:var(--mint)}
+.statement{margin-top:120px;padding-top:64px;border-top:1px solid var(--line)}
+.statement p{font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:clamp(28px,3.6vw,54px);line-height:1.16;letter-spacing:-.032em;color:var(--text);max-width:1120px}
+.statement em{font-style:normal;color:var(--gold)}
+.statement .w{opacity:.14;transition:opacity .3s linear}
+.statement .w.on{opacity:1}
+
+/* CÓMO FUNCIONA: escena 3D fija (three.js) */
+.how{position:relative;background:var(--bg)}
+.how-head{padding-top:136px}
+.how-head .head{margin-bottom:0}
+.how-pin{position:relative;height:420vh}
+.how-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.how-canvas{position:absolute;inset:0}
+.how-canvas canvas{display:block;width:100%!important;height:100%!important;opacity:0;transition:opacity 1.4s var(--ease)}
+.how.live .how-canvas canvas{opacity:1}
+.how-sticky::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(90deg,rgba(7,22,18,.94) 0%,rgba(7,22,18,.6) 30%,rgba(7,22,18,0) 52%)}
+.anchor{position:absolute;left:0;top:0;z-index:3;pointer-events:none;opacity:0;white-space:nowrap;padding-bottom:8px;color:var(--text-2);will-change:transform}
+.anchor.m{color:var(--mint)}.anchor.g{color:var(--gold)}
+.how-ui{position:relative;z-index:4;height:100%;display:flex;flex-direction:column;justify-content:center}
+.how-steps{position:relative;max-width:440px;height:360px}
+.hs{position:absolute;left:0;top:0;right:0;opacity:0;transform:translateY(-10px);transition:opacity .25s ease,transform .3s ease;pointer-events:none}
+.hs.on{opacity:1;transform:none;pointer-events:auto;transition:opacity .7s var(--ease) .22s,transform .8s var(--ease) .22s}
+.hs .n{display:block;color:var(--mint);margin-bottom:18px}
+.hs h3{font-size:clamp(30px,3.2vw,46px);letter-spacing:-.035em;line-height:1.04;margin-bottom:18px}
+.hs p{font-size:17px}
+.hs ul{list-style:none;margin-top:20px}
+.hs li{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:14px;color:var(--text-2)}
+.hs li b{font-weight:500;color:var(--text)}.hs li.m b{color:var(--mint)}.hs li.gd b{color:var(--gold)}
+.hs .note{margin-top:16px;font-size:14px;color:var(--text-3)}
+.how-nav{position:absolute;left:var(--pad);bottom:44px;display:flex;gap:24px;color:var(--text-3)}
+.how-nav span{transition:color .4s}
+.how-nav span.on{color:var(--text)}
+.how-reco{position:absolute;right:var(--pad);bottom:44px;z-index:4;width:340px;padding:20px 22px;border:1px solid var(--line-2);background:rgba(7,22,18,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:4px;opacity:0;transform:translateY(12px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.how-reco.on{opacity:1;transform:none}
+.how-reco .mono{color:var(--gold);display:block;margin-bottom:8px}
+.how-reco p{font-size:14.5px;color:var(--text)}
+.how-reco small{display:block;margin-top:8px;font-size:12px;color:var(--text-3)}
+.how.static .how-pin{height:auto}
+.how.static .how-sticky{position:relative;height:auto;overflow:visible}
+.how.static .how-sticky::after,.how.static .how-canvas,.how.static .anchor,.how.static .how-nav{display:none}
+.how.static .how-ui{padding:64px var(--pad) 24px}
+.how.static .how-steps{height:auto;max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:56px 64px}
+.how.static .hs{position:relative;opacity:1;transform:none}
+.how.static .how-reco{position:relative;right:auto;bottom:auto;opacity:1;transform:none;margin:24px var(--pad) 120px;width:auto;max-width:520px}
+
+/* VENTAJA */
+.moat{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-2)}
+.moat>div{padding:40px 36px 44px 0}
+.moat>div+div{padding-left:36px;border-left:1px solid var(--line)}
+.moat .n{font-family:'Space Grotesk',sans-serif;font-size:64px;line-height:1;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(232,239,236,.3);margin-bottom:36px}
+.moat>div:nth-child(2) .n{-webkit-text-stroke-color:rgba(217,178,106,.6)}
+.moat h3{margin-bottom:14px}
+.moat p{font-size:15px}
+.moat .k{display:block;margin-top:22px;color:var(--mint)}
+.moat>div:nth-child(2) .k{color:var(--gold)}
+.bio{margin-top:96px;display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;align-items:start;padding:48px;border:1px solid rgba(217,178,106,.22);border-radius:6px;background:linear-gradient(180deg,rgba(217,178,106,.05),rgba(217,178,106,0))}
+.bio h3{font-size:clamp(24px,2.4vw,32px);letter-spacing:-.03em;line-height:1.15}
+.bio-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.bio-steps .mono{color:var(--gold);display:block;margin-bottom:10px}
+.bio-steps h4{font-size:19px;margin-bottom:8px;letter-spacing:-.02em}
+.bio-steps p{font-size:14px}
+.moat-foot{margin-top:48px;font-family:'Space Grotesk',sans-serif;font-size:22px;letter-spacing:-.02em}
+
+/* APLICACIONES */
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.app{position:relative;height:560px;border-radius:4px;overflow:hidden;isolation:isolate;border:1px solid var(--line)}
+.app img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s var(--ease);filter:saturate(.8)}
+.app::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(7,22,18,.05) 0%,rgba(7,22,18,.35) 45%,rgba(7,22,18,.96) 100%)}
+.app:hover img{transform:scale(1.05)}
+.app-in{position:absolute;left:0;right:0;bottom:0;padding:28px}
+.app .mono{color:var(--mint);display:block;margin-bottom:10px}
+.app h3{font-size:32px;letter-spacing:-.035em}
+.app p{font-size:15px;color:var(--text-2);max-height:0;opacity:0;overflow:hidden;transition:max-height .6s var(--ease),opacity .5s,margin .5s}
+.app:hover p,.app:focus-within p{max-height:140px;opacity:1;margin-top:12px}
+.vars{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.vars span{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 8px;border:1px solid var(--line-2);border-radius:2px;color:var(--text-2)}
+
+/* ECOSISTEMA + I+D */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.b{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;min-height:210px;overflow:hidden}
+.b::after{content:"";position:absolute;left:0;top:0;height:1px;width:100%;background:var(--mint);transform:scaleX(0);transform-origin:left;transition:transform .9s var(--ease)}
+.b:hover{border-color:var(--line-2)}
+.b:hover::after{transform:scaleX(1)}
+.b>div{opacity:0;transform:translateY(10px);transition:opacity .8s var(--ease) .2s,transform .8s var(--ease) .2s}
+.b.in>div{opacity:1;transform:none}
+.b .mono{color:var(--text-3)}
+.b h3{margin:18px 0 10px}
+.b p{font-size:14px}
+.b.w2{grid-column:span 2}
+.b.hi{background:var(--brand);border-color:var(--brand)}
+.b.hi .mono{color:var(--gold)}
+.b.hi p{color:rgba(232,239,236,.78)}
+.b.w2 h3{font-size:28px;letter-spacing:-.03em}
+.partners{grid-column:span 4;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:22px 4px 0;color:var(--text-3)}
+
+/* MODELO DE TRABAJO */
+.phases{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:56px;padding-top:44px}
+.phases::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--line-2)}
+.phases .bar{position:absolute;top:0;left:0;height:1px;width:0;background:var(--mint);transition:width 1.8s var(--ease) .2s}
+.phases.in .bar{width:100%}
+.phase .n{display:block;font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--mint);margin-bottom:22px}
+.phase h3{font-size:clamp(24px,2.2vw,30px);letter-spacing:-.03em;margin-bottom:14px}
+.phase p{font-size:15px}
+.phase .out{display:block;margin-top:22px;color:var(--text-3);line-height:1.8}
+.opex{margin-top:72px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;color:var(--text-2)}
+.opex span{padding-top:16px;border-top:1px solid var(--line-2);font-size:14px}
+.opex span:first-child{border-top-color:var(--gold)}
+
+/* EQUIPO */
+.lead{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-bottom:80px}
+.crew{display:grid;grid-template-columns:repeat(4,1fr);gap:40px}
+.person{position:relative;padding-top:28px}
+.person::before,.person::after{content:"";position:absolute;top:0;left:0;height:1px;width:100%}
+.person::before{background:var(--line-2)}
+.person::after{background:var(--mint);transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.person:hover::after{transform:scaleX(1)}
+.person .role{display:block;color:var(--gold);margin-bottom:16px}
+.lead h3{font-size:clamp(32px,3.2vw,46px);letter-spacing:-.04em;line-height:1;margin-bottom:18px}
+.lead p{font-size:16px;max-width:480px}
+.creds{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-top:24px;max-width:520px}
+.creds li{font-size:13px;color:var(--text-3)}
+.crew h3{font-size:23px;letter-spacing:-.03em;margin-bottom:12px}
+.crew p{font-size:14px}
+
+/* CTA + FOOTER */
+.cta{position:relative;padding:150px 0 0;background:var(--bg-2);overflow:hidden}
+.cta .grid-bg{mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000,transparent 70%)}
+.cta-grid{position:relative;display:grid;grid-template-columns:1.3fr .7fr;gap:64px;align-items:end}
+.cta h2{font-size:clamp(34px,4.4vw,64px)}
+.cta p{font-size:17px;max-width:600px;margin-top:24px}
+.next{border:1px solid var(--line-2);border-radius:6px;padding:30px;background:var(--surface)}
+.next .mono{color:var(--gold);display:block;margin-bottom:14px}
+.next p{font-size:15px;margin:0 0 26px;color:var(--text-2)}
+.apoyo{position:relative;margin-top:120px;padding:40px 0;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:32px}
+.apoyo .mono{color:var(--text-3)}
+.apoyo-l{display:flex;align-items:center;gap:72px}
+.apoyo img{width:auto;filter:brightness(0) invert(1);opacity:.78;transition:opacity .3s}
+.apoyo img:hover{opacity:1}
+.l-udd{height:26px}.l-chr{height:52px}
+.foot{position:relative;border-top:1px solid var(--line);padding:48px 0 28px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;font-size:14px}
+.foot img{height:32px;filter:brightness(0) invert(1);opacity:.9}
+.foot p{margin-top:14px;font-size:13px;max-width:300px;color:var(--text-3)}
+.foot h4{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:14px}
+.foot ul{list-style:none;display:grid;gap:9px;color:var(--text-2)}
+.foot a:hover{color:var(--text)}
+.legal{position:relative;display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding:22px 0 30px;font-size:12px;color:var(--text-3)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1060px){
+  .links{display:none}.mb{display:block}
+  .hero-grid,.head,.cta-grid,.bio,.lead{grid-template-columns:1fr;gap:40px}
+  .fx{height:420px;min-height:0}
+  .qa-head{display:none}
+  .qa-row{grid-template-columns:1fr 1fr;gap:20px 32px;padding:32px 0}
+  .qa-row h3{grid-column:1/-1}
+  .qa-col .mono{display:block}
+  .moat,.apps{grid-template-columns:1fr}
+  .moat>div,.moat>div+div{padding:32px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .app{height:400px}.app p{max-height:none;opacity:1;margin-top:12px}
+  .bento{grid-template-columns:1fr 1fr}.partners{grid-column:span 2}
+  .phases{grid-template-columns:1fr;gap:40px}
+  .opex{grid-template-columns:1fr 1fr}
+  .crew{grid-template-columns:1fr 1fr;gap:40px 32px}
+  .lead{gap:48px;margin-bottom:48px}
+  .how-pin{height:380vh}
+  .how-sticky::after{background:linear-gradient(0deg,rgba(7,22,18,.97) 0%,rgba(7,22,18,.86) 36%,rgba(7,22,18,0) 60%)}
+  .how-ui{justify-content:flex-end;padding-bottom:84px}
+  .how-steps{height:310px;max-width:560px}
+  .hs h3{font-size:30px}.hs p{font-size:15.5px}
+  .hs{top:auto;bottom:0}
+  .hs li{font-size:13px;padding:9px 0}
+  .how-nav{bottom:30px}
+  .how-reco{left:var(--pad);right:var(--pad);top:92px;bottom:auto;width:auto;padding:14px 16px}
+  .how-reco small{display:none}
+  .how.static .how-steps{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  :root{--pad:20px}
+  .sec{padding:96px 0}
+  .head{margin-bottom:48px}
+  .hero-sub{font-size:16px}
+  .hero-cta{flex-wrap:wrap;gap:18px}
+  .fx{height:340px}
+  .claims{grid-template-columns:1fr}
+  .claim,.claim+.claim{padding:18px 0;border-left:0}
+  .claim+.claim{border-top:1px solid var(--line)}
+  .qa-row{grid-template-columns:1fr;gap:18px}
+  .qa-row h3{font-size:22px}
+  .qa-col p{font-size:15px}
+  .statement{margin-top:80px;padding-top:48px}
+  .how-head{padding-top:96px}
+  .how-steps{height:330px}
+  .hs h3{font-size:27px}.hs .n{margin-bottom:12px}
+  .hs li{grid-template-columns:1fr;gap:2px;padding:8px 0}
+  .moat .n{font-size:48px;margin-bottom:20px}
+  .bio{padding:28px 22px;margin-top:64px}.bio-steps{grid-template-columns:1fr;gap:22px}
+  .bento,.foot,.crew{grid-template-columns:1fr}
+  .b.w2,.partners{grid-column:auto}
+  .lead h3{font-size:34px}
+  .creds{grid-template-columns:1fr}
+  .cta{padding-top:104px}
+  .apoyo{margin-top:80px;flex-direction:column;align-items:flex-start;gap:22px}
+  .apoyo-l{gap:24px;flex-wrap:wrap}.l-udd{height:17px}.l-chr{height:33px}
+  .legal{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal,.fade,.qa-col.bm,.b>div{opacity:1;transform:none}.hero h1 .ln>span{transform:none}
+}
+</style>
+<noscript><style>
+.reveal,.fade,.qa-col.bm,.b>div{opacity:1!important;transform:none!important}
+@supports (animation-timeline: view()){
+  .reveal{animation:nsUp linear both!important;animation-timeline:view()!important;animation-range:entry 0% entry 55%!important}
+  @keyframes nsUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+}
+.how-pin{height:auto!important}.how-sticky{position:relative!important;height:auto!important}.how-sticky::after,.how-canvas,.anchor,.how-nav{display:none!important}
+.how-ui{padding:64px var(--pad) 24px}.how-steps{height:auto!important;max-width:none!important;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px}.hs{position:relative!important;opacity:1!important;transform:none!important}
+.how-reco{position:relative!important;opacity:1!important;transform:none!important;right:auto!important;bottom:auto!important;top:auto!important;margin:24px var(--pad) 120px;width:auto!important;max-width:520px}
+.phases .bar{width:100%!important}
+.app p{max-height:none!important;opacity:1!important;margin-top:12px!important}
+</style></noscript>
+</head>
+<body>
+
+<div class="mm" id="menu" aria-label="Menú">
+  <a class="mm-x" href="#cerrar" aria-label="Cerrar menú"><span></span><span></span></a>
+  <a class="l" href="#como">Cómo funciona</a>
+  <a class="l" href="#ventaja">Biología</a>
+  <a class="l" href="#aplicaciones">Aplicaciones</a>
+  <a class="l" href="#modelo">Cómo trabajamos</a>
+  <a class="l" href="#equipo">Equipo</a>
+  <a class="l" href="#contacto">Contacto</a>
+  <small>BetterMin, Santiago de Chile</small>
+</div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#inicio" class="logo" aria-label="BetterMin, inicio"><img src="assets/logo.png" alt="BetterMin"></a>
+    <nav class="links" aria-label="Principal">
+      <a href="#como">Cómo funciona</a>
+      <a href="#ventaja">Biología</a>
+      <a href="#aplicaciones">Aplicaciones</a>
+      <a href="#modelo">Cómo trabajamos</a>
+      <a href="#equipo">Equipo</a>
+      <a href="#contacto" class="btn-o">Contacto</a>
+    </nav>
+    <a class="mb" href="#menu" aria-label="Abrir menú"><span></span><span></span><span></span></a>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <div class="grid-bg"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="label mono fade">Biotecnología, minería e inteligencia artificial</div>
+      <h1><span class="ln"><span>La biología</span></span><span class="ln"><span>de tu proceso</span></span><span class="ln"><span class="gold">finalmente</span></span><span class="ln"><span class="gold">tiene dueño.</span></span></h1>
+      <p class="hero-sub fade">Leemos las comunidades microbianas que viven en la pulpa, el agua de proceso y el mineral de tu planta, y las convertimos en inteligencia operacional propietaria. Los indicadores que tu SCADA nunca te va a dar.</p>
+      <div class="hero-cta fade">
+        <a href="#contacto" class="btn">Alinear un piloto <span aria-hidden="true">→</span></a>
+        <a href="#como" class="link-a">Cómo funciona <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <div class="fx" id="fx" aria-hidden="true">
+      <div class="still"><img src="assets/isotipo.png" alt=""></div>
+      <canvas id="fxCanvas"></canvas>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="claims">
+      <div class="claim reveal"><span class="mono">Mine-to-Plant</span><p>Trazabilidad completa del dato operacional.</p></div>
+      <div class="claim reveal d1"><span class="mono">Indicadores propietarios</span><p>Proxies biológicos que anticipan cambios de proceso.</p></div>
+      <div class="claim reveal d2"><span class="mono">Por operación</span><p>Cada planta es distinta. Cada modelo también.</p></div>
+    </div>
+  </div>
+  <div class="ticker mono" aria-hidden="true"><div class="ticker-in">
+    <span>SCADA</span><span>PLC</span><span>Historiadores</span><span>LIMS</span><span>Ley de cabeza</span><span>Granulometría</span><span>pH y Eh</span><span>Metagenómica</span><span>Actividad metabólica</span><span>Diversidad microbiana</span><span>Reactivos</span><span>Gemelo digital</span>
+    <span>SCADA</span><span>PLC</span><span>Historiadores</span><span>LIMS</span><span>Ley de cabeza</span><span>Granulometría</span><span>pH y Eh</span><span>Metagenómica</span><span>Actividad metabólica</span><span>Diversidad microbiana</span><span>Reactivos</span><span>Gemelo digital</span>
+  </div></div>
+</section>
+
+<section class="sec alt" id="problema">
+  <div class="wrap">
+    <div class="head">
+      <div class="reveal"><div class="label mono">El problema</div><h2>Los datos existen. Pero nadie los conecta.</h2></div>
+      <p class="reveal d1">SCADA, laboratorio, LIMS, microbiología, historiadores, ERP: cada sistema guarda una parte de la historia. Estas son las preguntas que una planta se hace todos los días, y cómo se responden hoy.</p>
+    </div>
+    <div class="qa">
+      <div class="qa-head mono"><span>La pregunta de la planta</span><span>Hoy</span><span>Con BetterMin</span></div>
+      <div class="qa-row reveal">
+        <h3>¿Por qué cayó la recuperación?</h3>
+        <div class="qa-col now"><span class="mono">Hoy</span><p>Se reconstruye días después, cruzando planillas y reportes de laboratorio a mano.</p></div>
+        <div class="qa-col bm"><span class="mono">Con BetterMin</span><p>El modelo muestra qué variables cambiaron y en qué orden, con trazabilidad hasta el dato de origen.</p></div>
+      </div>
+      <div class="qa-row reveal">
+        <h3>¿Qué está pasando con la biología del proceso?</h3>
+        <div class="qa-col now"><span class="mono">Hoy</span><p>Nadie la mide. Es la variable que más rápido cambia y la única que nadie mira.</p></div>
+        <div class="qa-col bm"><span class="mono">Con BetterMin</span><p>Caracterizamos la pulpa, el agua de proceso y el mineral, y lo convertimos en indicadores propios de tu planta.</p></div>
+      </div>
+      <div class="qa-row reveal">
+        <h3>¿Qué hacemos en el próximo turno?</h3>
+        <div class="qa-col now"><span class="mono">Hoy</span><p>Se decide por experiencia y se corrige cuando el problema ya impactó la operación.</p></div>
+        <div class="qa-col bm"><span class="mono">Con BetterMin</span><p>Recomendaciones priorizadas y explicables, que tu equipo valida antes de actuar.</p></div>
+      </div>
+      <div class="qa-row reveal">
+        <h3>¿Hay que invertir en instrumentación nueva?</h3>
+        <div class="qa-col now"><span class="mono">Hoy</span><p>Los proyectos de datos parten pidiendo SCADA, sensores y meses de integración.</p></div>
+        <div class="qa-col bm"><span class="mono">Con BetterMin</span><p>Partimos con lo que la planta ya mide, incluso planillas, y escalamos por etapas.</p></div>
+      </div>
+    </div>
+    <div class="statement"><p id="statement">El verdadero pulso de tu operación está en la biología de la pulpa, el agua de proceso y el mineral: <em>el indicador de cambio más rápido, y hasta hoy, el más ignorado.</em></p></div>
+  </div>
+</section>
+
+<section class="how" id="como">
+  <div class="wrap how-head">
+    <div class="head">
+      <div class="reveal"><div class="label mono">Cómo funciona</div><h2>De la captura a la recomendación.</h2></div>
+      <p class="reveal d1">Del rajo a la decisión: así viajan los datos de tu operación cuando por fin trabajan juntos.</p>
+    </div>
+  </div>
+  <div class="how-pin" id="howPin">
+    <div class="how-sticky">
+      <div class="how-canvas" id="flow3d" aria-hidden="true"></div>
+      <span class="anchor mono" data-k="scada">SCADA</span>
+      <span class="anchor mono" data-k="lab">Laboratorio</span>
+      <span class="anchor mono" data-k="lims">LIMS</span>
+      <span class="anchor mono" data-k="hist">Historiadores</span>
+      <span class="anchor mono m" data-k="ley">Ley de cabeza</span>
+      <span class="anchor mono g" data-k="micro">Microbiología</span>
+      <span class="anchor mono m" data-k="core">Gemelo digital</span>
+      <span class="anchor mono g" data-k="dev">Desviación anticipada</span>
+      <div class="wrap how-ui">
+        <div class="how-steps">
+          <div class="hs on"><span class="n mono">01 Capturar</span><h3>Señales dispersas, por fin juntas.</h3><p>Sensores, SCADA, planillas y registros manuales en cada banco y cada etapa del proceso. Digitalizamos lo que la planta ya mide, sin exigir instrumentación nueva.</p></div>
+          <div class="hs"><span class="n mono">02 Tres fuentes</span><h3>Mina, planta y biología.</h3>
+            <ul>
+              <li><b>Operacional</b><span>SCADA, PLC, historiadores, sensores IoT y variables de proceso.</span></li>
+              <li class="m"><b>Mineralogía</b><span>Ley de cabeza, litología, dureza, granulometría, pH y Eh.</span></li>
+              <li class="gd"><b>Biológica</b><span>Microorganismos, metagenómica, actividad metabólica y diversidad microbiana.</span></li>
+            </ul>
+          </div>
+          <div class="hs"><span class="n mono">03 Modelar</span><h3>Un gemelo digital por planta.</h3><p>Los tres flujos se integran en un modelo calibrado con datos reales de tu operación, que entiende cómo se relacionan mineralogía, proceso y biología. Sin modelos genéricos.</p></div>
+          <div class="hs"><span class="n mono">04 Recomendar</span><h3>Ver el problema antes de que llegue.</h3><p>El agente detecta la desviación, explica qué la causa y propone qué hacer, con trazabilidad hasta la variable de origen.</p><p class="note">No reemplaza al operador ni a la ingeniería de planta: entrega soporte predictivo y explicable.</p></div>
+        </div>
+        <div class="how-nav mono" aria-hidden="true"><span class="on">01</span><span>02</span><span>03</span><span>04</span></div>
+      </div>
+      <div class="how-reco" id="howReco"><span class="mono">Recomendación</span><p>Revisar la dosificación de reactivos antes del próximo turno.</p><small>Causa trazada: actividad microbiana de la pulpa, Eh y ley de cabeza. Ejemplo ilustrativo.</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ventaja">
+  <div class="wrap">
+    <div class="head">
+      <div class="reveal"><div class="label mono g">Nuestra ventaja</div><h2>Lo que construimos no se copia con software.</h2></div>
+      <p class="reveal d1">Tres activos que se refuerzan entre sí. Ninguno es genérico. Los tres crecen con cada operación que se suma a la plataforma.</p>
+    </div>
+    <div class="moat">
+      <div class="reveal"><div class="n">01</div><h3>Datos propietarios Mine-to-Plant</h3><p>Integramos el flujo completo de cada planta, desde la mineralogía de cabeza hasta el concentrado final, en un modelo de trazabilidad total. Cada operación suma un activo de datos que no existe en ningún otro lugar.</p><span class="k mono">Datos</span></div>
+      <div class="reveal d1"><div class="n">02</div><h3>Pipeline de caracterización biológica</h3><p>Secuenciamos, identificamos y cuantificamos las comunidades microbianas de la pulpa, el agua de proceso y el mineral. Caracterizamos lo que ya está vivo en la operación y lo convertimos en indicadores propietarios.</p><span class="k mono">Biología</span></div>
+      <div class="reveal d2"><div class="n">03</div><h3>Motor de IA con contexto de planta</h3><p>Gemelo digital, simulación what-if y agentes de IA entrenados con datos reales de cada faena. Cada predicción tiene data lineage hasta la variable de origen.</p><span class="k mono">IA explicable</span></div>
+    </div>
+    <div class="bio reveal">
+      <div><div class="label mono g">Biología como moat</div><h3>Una señal invisible para la decisión operacional.</h3></div>
+      <div class="bio-steps">
+        <div><span class="mono">01 Caracterizar</span><h4>Qué vive en el proceso</h4><p>Qué microorganismos están presentes y su actividad biológica.</p></div>
+        <div><span class="mono">02 Cruzar</span><h4>Con qué se relaciona</h4><p>pH, redox, temperatura, granulometría y reactivos.</p></div>
+        <div><span class="mono">03 Aprender</span><h4>Qué anticipa</h4><p>Indicadores propietarios por planta para guiar hipótesis y decisiones.</p></div>
+      </div>
+    </div>
+    <p class="moat-foot reveal">Tres activos. Una plataforma. <span class="gold">Cero datos genéricos.</span></p>
+  </div>
+</section>
+
+<section class="sec alt" id="aplicaciones">
+  <div class="wrap">
+    <div class="head">
+      <div class="reveal"><div class="label mono">Aplicaciones</div><h2>Procesos mineros con inteligencia integrada.</h2></div>
+      <p class="reveal d1">Un modelo específico por proceso, alimentado por las variables que de verdad lo mueven.</p>
+    </div>
+    <div class="apps">
+      <article class="app reveal" tabindex="0"><img src="assets/flotacion.jpg" alt="Celdas de flotación" loading="lazy"><div class="app-in"><span class="mono">01</span><h3>Flotación</h3><p>Monitoreo de estabilidad, predicción de recuperación con contexto mineralógico y alertas tempranas de desviación del proceso.</p><div class="vars"><span>Recuperación</span><span>Reactivos</span><span>Estabilidad</span></div></div></article>
+      <article class="app reveal d1" tabindex="0"><img src="assets/lixiviacion.jpg" alt="Pilas de lixiviación" loading="lazy"><div class="app-in"><span class="mono">02</span><h3>Lixiviación</h3><p>Control de cinética, potencial redox y modelo predictivo de recuperación con alertas de acidificación temprana.</p><div class="vars"><span>Cinética</span><span>Eh y pH</span><span>Acidificación</span></div></div></article>
+      <article class="app reveal d2" tabindex="0"><img src="assets/relave.jpg" alt="Tranque de relaves" loading="lazy"><div class="app-in"><span class="mono">03</span><h3>Relaves</h3><p>Monitoreo de estabilidad, espesado y trazabilidad de campañas con detección temprana de riesgo ambiental.</p><div class="vars"><span>Espesado</span><span>Campañas</span><span>Riesgo ambiental</span></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ecosistema">
+  <div class="wrap">
+    <div class="head">
+      <div class="reveal"><div class="label mono">Ecosistema e I+D</div><h2>No hacemos esto solos. Desarrollamos conocimiento.</h2></div>
+      <p class="reveal d1">No vendemos herramientas: combinamos investigación con respaldo académico y capacidad propia de laboratorio.</p>
+    </div>
+    <div class="bento">
+      <div class="b w2 hi reveal"><span class="mono">Alianza científica</span><div><h3>Investigación con respaldo académico</h3><p>Colaboramos con universidades y centros de investigación en microbiología aplicada a procesos mineros, co-publicación de hallazgos y formación de talento especializado.</p></div></div>
+      <div class="b w2 reveal d1"><span class="mono">Capacidad de laboratorio</span><div><h3>Caracterización sin externalizar</h3><p>Controlamos el ciclo completo, desde la toma de muestra en faena hasta el análisis bioinformático, sin depender de laboratorios externos.</p></div></div>
+      <div class="b reveal"><span class="mono">I+D 01</span><div><h3>Inteligencia Artificial</h3><p>Machine learning, modelos predictivos y agentes inteligentes.</p></div></div>
+      <div class="b reveal d1"><span class="mono">I+D 02</span><div><h3>Biotecnología Industrial</h3><p>Microbiología aplicada, bioinformática y metagenómica.</p></div></div>
+      <div class="b reveal d2"><span class="mono">I+D 03</span><div><h3>Gemelos Digitales</h3><p>Datos en tiempo real con simulación what-if.</p></div></div>
+      <div class="b reveal d3"><span class="mono">I+D 04</span><div><h3>Agentes IA</h3><p>Multi-agente con RAG y LLM, trazable en lenguaje natural.</p></div></div>
+      <div class="b w2 reveal"><span class="mono">I+D 05</span><div><h3>Ciencia de Datos</h3><p>Series temporales, detección de anomalías y optimización de variables operacionales.</p></div></div>
+      <div class="b w2 reveal d1"><span class="mono">I+D 06</span><div><h3>Inteligencia Operacional</h3><p>SCADA, laboratorio, IoT y metagenómica integrados en un solo modelo.</p></div></div>
+      <div class="partners mono reveal"><span>Universidades</span><span>Centros I+D</span><span>Empresas mineras</span><span>Partners tecnológicos</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" id="modelo">
+  <div class="wrap">
+    <div class="head">
+      <div class="reveal"><div class="label mono">Cómo trabajamos</div><h2>Empezamos acotado. Escalamos con resultados.</h2></div>
+      <p class="reveal d1">Implementación por etapas y modalidad de suscripción: sin inversión de capital y con KPIs acordados desde el primer día.</p>
+    </div>
+    <div class="phases reveal" id="phases">
+      <span class="bar"></span>
+      <div class="phase"><span class="n">01</span><h3>Diagnóstico</h3><p>Entendemos tu proceso, levantamos lo que la planta ya mide y tomamos las primeras muestras biológicas de pulpa, agua de proceso y mineral.</p><span class="out mono">Mapa de datos y primera caracterización</span></div>
+      <div class="phase"><span class="n">02</span><h3>Piloto</h3><p>Calibramos el gemelo digital con tus datos, fijamos la línea base y validamos las primeras alertas contra los KPIs acordados.</p><span class="out mono">Línea base, KPIs y alertas</span></div>
+      <div class="phase"><span class="n">03</span><h3>Suscripción por planta</h3><p>Operación continua: monitoreo, nuevos indicadores biológicos y un modelo que mejora con cada campaña.</p><span class="out mono">Plataforma, soporte y mejora continua</span></div>
+    </div>
+    <div class="opex reveal"><span>Modalidad OPEX</span><span>Sin reemplazar sistemas existentes</span><span>Modelo específico por planta</span><span>Trazabilidad en cada recomendación</span></div>
+  </div>
+</section>
+
+<section class="sec" id="equipo">
+  <div class="wrap">
+    <div class="head">
+      <div class="reveal"><div class="label mono">Equipo</div><h2>Las personas detrás de BetterMin.</h2></div>
+      <p class="reveal d1">Regulación minera, tecnología, operaciones de planta, finanzas y biotecnología. Experiencia de faena, no solo de laboratorio.</p>
+    </div>
+    <div class="lead">
+      <article class="person reveal">
+        <span class="role mono">CEO y cofundador</span>
+        <h3>Emilio Lazo</h3>
+        <p>Lidera la dirección ejecutiva, las relaciones comerciales, las alianzas estratégicas y la implementación en faena.</p>
+        <ul class="creds"><li>Ingeniero Civil Ambiental</li><li>MBA en Innovación, UDD</li><li>Ex SEREMI de Minería, Coquimbo</li><li>Ex Director Regional SERNAGEOMIN</li></ul>
+      </article>
+      <article class="person reveal d1">
+        <span class="role mono">CTO, CPO y cofundador</span>
+        <h3>Claudio Torrejón</h3>
+        <p>Lidera la visión tecnológica, la arquitectura de la plataforma y el desarrollo de producto.</p>
+        <ul class="creds"><li>Ingeniero Industrial</li><li>MBA, track en Blockchain</li></ul>
+      </article>
+    </div>
+    <div class="crew">
+      <article class="person reveal"><span class="role mono">COO, minería secundaria</span><h3>Guillermo De Aro</h3><p>Ingeniero comercial y ex jugador profesional de rugby. Más de 20 años de experiencia en minería en Argentina y Chile.</p></article>
+      <article class="person reveal d1"><span class="role mono">CFO</span><h3>Gustavo Defilippi</h3><p>EMBA Universidad Austral. Empresario y emprendedor en LATAM, Board de Endeavor Argentina.</p></article>
+      <article class="person reveal d2"><span class="role mono">CSO, biotecnología</span><h3>Andrés Zurita</h3><p>Doctor en Biotecnología (México) y Magíster en Ciencias Botánicas. 30 años en genética vegetal, biología molecular y fisiología.</p></article>
+      <article class="person reveal d3"><span class="role mono">Metalurgia</span><h3>Carlos Pérez Bozo</h3><p>Ingeniero Civil Metalurgista. Especialista en procesos metalúrgicos, flotación y operaciones de planta.</p></article>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="cta" id="contacto">
+  <div class="grid-bg"></div>
+  <div class="wrap">
+    <div class="cta-grid">
+      <div class="reveal">
+        <div class="label mono g">El futuro de la minería</div>
+        <h2>La minería del futuro será más inteligente, más integrada y <span class="gold">más biológica.</span></h2>
+        <p>Descubra cómo BetterMin transforma datos operacionales, mineralógicos y biológicos en decisiones que mejoran el desempeño de los procesos mineros.</p>
+      </div>
+      <div class="next reveal d1">
+        <span class="mono">Hablemos de su planta</span>
+        <p>Cuéntenos qué proceso opera y qué datos tiene hoy. Le respondemos con una propuesta de diagnóstico.</p>
+        <a href="#contacto" class="btn">Agendar reunión técnica <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="apoyo reveal">
+      <span class="mono">Con el apoyo de</span>
+      <div class="apoyo-l"><img src="assets/udd-ventures.png" alt="UDD Ventures" class="l-udd"><img src="assets/chrysalis.png" alt="Chrysalis · Incubadora de negocios PUCV" class="l-chr"></div>
+    </div>
+    <div class="foot">
+      <div><img src="assets/logo.png" alt="BetterMin"><p>Biotecnología e Inteligencia Operacional para la Minería.</p></div>
+      <div><h4>Sitio</h4><ul><li><a href="#como">Cómo funciona</a></li><li><a href="#ventaja">Biología</a></li><li><a href="#modelo">Cómo trabajamos</a></li><li><a href="#equipo">Equipo</a></li></ul></div>
+      <div><h4>BetterMin SpA</h4><ul><li>Santiago, Chile</li><li><a href="https://bettermin.com">bettermin.com</a></li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 BetterMin SpA</span><span>Minería inteligente, futuro sostenible</span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var mobile = function(){ return innerWidth < 1060; };
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // nav
+  var nav = document.getElementById('nav'), last = 0;
+  addEventListener('scroll', function(){
+    var y = scrollY;
+    nav.classList.toggle('solid', y > 30);
+    nav.classList.toggle('hide', y > last && y > 600);
+    last = y;
+  }, {passive:true});
+
+  // reveal
+  var io = new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+
+  // nav activa
+  var links = document.querySelectorAll('.links a');
+  var io3 = new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)})})},{rootMargin:'-45% 0px -50% 0px'});
+  document.querySelectorAll('main section[id]').forEach(function(s){io3.observe(s)});
+
+  // frase que se enciende palabra por palabra
+  var st = document.getElementById('statement'), words = [];
+  if (st && !reduce){
+    [].slice.call(st.childNodes).forEach(function(n){
+      var gold = n.nodeType === 1, txt = n.textContent, frag = document.createDocumentFragment();
+      txt.split(/(\s+)/).forEach(function(w){
+        if (!w) return;
+        if (/^\s+$/.test(w)){ frag.appendChild(document.createTextNode(w)); return; }
+        var sp = document.createElement('span'); sp.className = 'w'; sp.textContent = w;
+        if (gold){ var em = document.createElement('em'); em.appendChild(sp); frag.appendChild(em); } else frag.appendChild(sp);
+        words.push(sp);
+      });
+      st.replaceChild(frag, n);
+    });
+  }
+  function statementUpdate(){
+    if (!words.length) return;
+    var r = st.getBoundingClientRect(), vh = innerHeight;
+    var pr = Math.max(0, Math.min(1, (vh * .82 - r.top) / (r.height + vh * .32)));
+    var n = Math.round(pr * words.length);
+    for (var k = 0; k < words.length; k++) words[k].classList.toggle('on', k < n);
+  }
+
+  // cómo funciona: escena 3D fija
+  var how = document.getElementById('como'), pin = document.getElementById('howPin');
+  var hsEls = how.querySelectorAll('.hs'), nums = how.querySelectorAll('.how-nav span'), reco = document.getElementById('howReco');
+  var flow = null, curStep = -1;
+  function howProg(){ var r = pin.getBoundingClientRect(), tot = pin.offsetHeight - innerHeight; return tot > 0 ? Math.max(0, Math.min(1, -r.top / tot)) * 3 : 0; }
+  function howUpdate(){
+    if (how.classList.contains('static')) return;
+    var p = howProg(), i = Math.min(3, Math.round(p));
+    if (i !== curStep){
+      curStep = i;
+      hsEls.forEach(function(h,k){ h.classList.toggle('on', k === i); });
+      nums.forEach(function(n,k){ n.classList.toggle('on', k === i); });
+      reco.classList.toggle('on', i === 3);
+    }
+    if (flow) flow.setProgress(p);
+  }
+  addEventListener('scroll', function(){ howUpdate(); statementUpdate(); }, {passive:true});
+  addEventListener('resize', function(){ howUpdate(); statementUpdate(); }, {passive:true});
+  statementUpdate();
+
+  function hasWebGL(){ try{ var c=document.createElement('canvas'); return !!(c.getContext('webgl2')||c.getContext('webgl')); }catch(e){ return false; } }
+  var gl = hasWebGL();
+  if (!gl || reduce){ how.classList.add('static'); }
+  howUpdate();
+  if (!gl || reduce) return;
+
+  var fxReady = null;
+  function loadFx(){
+    if (!fxReady) fxReady = new Promise(function(res, rej){ var s = document.createElement('script'); s.src = 'assets/fx.js?v=7'; s.onload = res; s.onerror = rej; document.body.appendChild(s); });
+    return fxReady;
+  }
+
+  // escena 3D: se crea cuando la sección se acerca
+  var ioHow = new IntersectionObserver(function(es){ es.forEach(function(e){
+    if (!e.isIntersecting) return; ioHow.disconnect();
+    loadFx().then(function(){
+      if (!window.createFlow3D) { how.classList.add('static'); return; }
+      var anchors = [].slice.call(how.querySelectorAll('.anchor')).map(function(el){ return {el: el, key: el.dataset.k}; });
+      try { flow = window.createFlow3D(document.getElementById('flow3d'), anchors, {mobile: mobile(), reduce: reduce}); }
+      catch(err){ how.classList.add('static'); return; }
+      how.classList.add('live'); howUpdate();
+      new IntersectionObserver(function(xs){ xs.forEach(function(x){ flow.setActive(x.isIntersecting); }); }).observe(pin);
+    }).catch(function(){ how.classList.add('static'); });
+  }); }, {rootMargin:'400px 0px'});
+  ioHow.observe(how);
+
+  // partículas del hero (canvas-ui ParticleObject)
+  var fx = document.getElementById('fx');
+  var ioHero = new IntersectionObserver(function(es){ es.forEach(function(e){
+    if (!e.isIntersecting) return; ioHero.disconnect();
+    loadFx().then(function(){
+      if (!window.createParticleObject) return;
+      var inst = window.createParticleObject({canvas: document.getElementById('fxCanvas')}, {
+        src: 'assets/isotipo.png',
+        count: mobile() ? 7000 : 16000,
+        size: mobile() ? 1.8 : 2.1,
+        sizeVariance: .5,
+        color: '#A9DCC6',
+        radius: mobile() ? 80 : 130,
+        strength: 1.1, swirl: .7, spring: .9, damping: .4,
+        drift: .35,
+        scale: mobile() ? 2.6 : 3.1,
+        floatIntensity: .8, rotationIntensity: .35, floatSpeed: 1.2,
+        orbit: false, zoom: false, autoRotate: false,
+        background: '',
+        onLoad: function(){ fx.classList.add('ready'); },
+        onError: function(){ fx.classList.remove('ready'); }
+      });
+      new IntersectionObserver(function(xs){ xs.forEach(function(x){ fx.style.visibility = x.isIntersecting ? 'visible' : 'hidden'; }); }).observe(fx);
+      addEventListener('resize', function(){ inst.resize(); }, {passive:true});
+    });
+  }); });
+  ioHero.observe(fx);
+})();
+</script>
+</body>
+</html>
