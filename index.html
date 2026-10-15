@@ -168,6 +168,7 @@ p{color:var(--text-2)}
 .hs li{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:14px;color:var(--text-2)}
 .hs li b{font-weight:500;color:var(--text)}.hs li.m b{color:var(--mint)}.hs li.gd b{color:var(--gold)}
 .hs .note{margin-top:16px;font-size:14px;color:var(--text-3)}
+.hs-reco{display:none}
 .how-nav{position:absolute;left:var(--pad);bottom:44px;display:flex;gap:24px;color:var(--text-3)}
 .how-nav span{transition:color .4s}
 .how-nav span.on{color:var(--text)}
@@ -182,6 +183,7 @@ p{color:var(--text-2)}
 .how.static .how-ui{padding:64px var(--pad) 24px}
 .how.static .how-steps{height:auto;max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:56px 64px}
 .how.static .hs{position:relative;opacity:1;transform:none}
+.how.static .hs-reco{display:none!important}
 .how.static .how-reco{position:relative;right:auto;bottom:auto;opacity:1;transform:none;margin:24px var(--pad) 120px;width:auto;max-width:520px}
 
 /* VENTAJA */
@@ -311,8 +313,11 @@ p{color:var(--text-2)}
   .hs{top:auto;bottom:0}
   .hs li{font-size:13px;padding:9px 0}
   .how-nav{bottom:30px}
-  .how-reco{left:var(--pad);right:var(--pad);top:92px;bottom:auto;width:auto;padding:14px 16px}
-  .how-reco small{display:none}
+  .how-reco{display:none}
+  .hs-reco{display:block;margin-top:18px;padding-top:14px;border-top:1px solid var(--line-2)}
+  .hs-reco .mono{display:block;color:var(--gold);margin-bottom:6px}
+  .hs-reco p{font-size:15px;color:var(--text)}
+  .hs .note{display:none}
   .how.static .how-steps{grid-template-columns:1fr}
 }
 @media(max-width:640px){
@@ -356,7 +361,7 @@ p{color:var(--text-2)}
   @keyframes nsUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 }
 .how-pin{height:auto!important}.how-sticky{position:relative!important;height:auto!important}.how-sticky::after,.how-canvas,.anchor,.how-nav{display:none!important}
-.how-ui{padding:64px var(--pad) 24px}.how-steps{height:auto!important;max-width:none!important;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px}.hs{position:relative!important;opacity:1!important;transform:none!important}
+.how-ui{padding:64px var(--pad) 24px}.how-steps{height:auto!important;max-width:none!important;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px}.hs{position:relative!important;opacity:1!important;transform:none!important}.hs-reco{display:none!important}
 .how-reco{position:relative!important;opacity:1!important;transform:none!important;right:auto!important;bottom:auto!important;top:auto!important;margin:24px var(--pad) 120px;width:auto!important;max-width:520px}
 .phases .bar{width:100%!important}
 .app p{max-height:none!important;opacity:1!important;margin-top:12px!important}
@@ -482,7 +487,7 @@ p{color:var(--text-2)}
             </ul>
           </div>
           <div class="hs"><span class="n mono">03 Modelar</span><h3>Un gemelo digital por planta.</h3><p>Los tres flujos se integran en un modelo calibrado con datos reales de tu operación, que entiende cómo se relacionan mineralogía, proceso y biología. Sin modelos genéricos.</p></div>
-          <div class="hs"><span class="n mono">04 Recomendar</span><h3>Ver el problema antes de que llegue.</h3><p>El agente detecta la desviación, explica qué la causa y propone qué hacer, con trazabilidad hasta la variable de origen.</p><p class="note">No reemplaza al operador ni a la ingeniería de planta: entrega soporte predictivo y explicable.</p></div>
+          <div class="hs"><span class="n mono">04 Recomendar</span><h3>Ver el problema antes de que llegue.</h3><p>El agente detecta la desviación, explica qué la causa y propone qué hacer, con trazabilidad hasta la variable de origen.</p><div class="hs-reco"><span class="mono">Recomendación</span><p>Revisar la dosificación de reactivos antes del próximo turno.</p></div><p class="note">No reemplaza al operador ni a la ingeniería de planta: entrega soporte predictivo y explicable.</p></div>
         </div>
         <div class="how-nav mono" aria-hidden="true"><span class="on">01</span><span>02</span><span>03</span><span>04</span></div>
       </div>
